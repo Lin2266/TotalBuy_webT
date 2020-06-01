@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app metadata-complete="false" version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+ <!--metadata設定為true時servlet設定就沒效，要改false，上線時才用true-->    
+    
+    <!--拜訪人次-->
+    <context-param>
+        <!--在servlet裡的application.getInitParameter("prop-path")，參數要對應xml的name-->
+        <param-name>prop-path</param-name>
+        <param-value>/WEB-INF/config/total.properties</param-value>
+    </context-param>
+    <!--    <servlet>
+        <servlet-name>default</servlet-name>
+        <servlet-class>uuu.totalbuy.view.ImageCheckServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>-->
+    
+     <!--filter過瀘設定，效能監控-->
+    <filter>
+         <!--servlet類別名稱-->
+        <filter-name>PerformanceFilter1</filter-name>
+         <!--檔案路徑-->
+        <filter-class>uuu.totalbuy.web.PerformanceFilter</filter-class>
+         <!--初始化設定-->
+        <init-param>
+             <!--對應要初始化的物件名稱-->
+            
+            <!--初始化的值--><param-name>prefix</param-name>
+            <param-value>效能監控1:</param-value>
+        </init-param>
+    </filter>
+    <!--要過瀘的副檔名-->
+    <filter-mapping>
+        <filter-name>PerformanceFilter1</filter-name>
+        <!--        <servlet-name>RegisterImageCheckServlet</servlet-name>-->
+        <!--監控的副檔名-->
+        <url-pattern>*.do</url-pattern>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>PerformanceFilter2</filter-name>
+        <filter-class>uuu.totalbuy.web.PerformanceFilter</filter-class>
+        <init-param>
+            <param-name>prefix</param-name>
+            <param-value>效能監控2:</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>PerformanceFilter2</filter-name>
+        <url-pattern>*.do</url-pattern>
+        <url-pattern>*.jsp</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
+    
+    
+     <!--建立第一個物件name-->
+    <servlet>
+        <!--建立一個物件對外服務-->
+        <servlet-name>ImageCheckServlet</servlet-name>
+        <!--要使用的package，類別名稱-->
+        <servlet-class>uuu.totalbuy.view.ImageCheckServlet</servlet-class>
+        <init-param>
+            <param-name>len</param-name>
+            <param-value>4</param-value>
+        </init-param>
+         <!--測試生命週期,無參數建構子-->
+        <load-on-startup>100</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>RegisterServlet</servlet-name>
+        <servlet-class>uuu.totalbuy.controller.RegisterServlet</servlet-class>
+    </servlet>
+    
+    <!--物件才有對應的url-->
+    <servlet-mapping>
+        <servlet-name>ImageCheckServlet</servlet-name>
+        <url-pattern>/images/check.jpg</url-pattern>
+   
+     <!--建立第二個物件-->    
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>RegisterImageCheckServlet</servlet-name>
+        <servlet-class>uuu.totalbuy.view.ImageCheckServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RegisterImageCheckServlet</servlet-name>
+        <!--第二個url，不能跟第一個一樣-->
+        <url-pattern>/images/register_check.jpg</url-pattern>
+    </servlet-mapping>
+    
+    <!--第三個url,name跟url自取,-->
+    <servlet>
+        <!--3.透過HelloJSP物件對應-->
+        <servlet-name>HelloJSP</servlet-name>
+        <!--4.沒有初始化就用這邊-->
+        <jsp-file>/jsp範例/hello.jsp</jsp-file>
+        <!--初始化用-->
+        <init-param>
+            <param-name>welcome</param-name>
+            <param-value>歡迎, 現在是</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <!--2.找HelloJSP物件-->
+        <servlet-name>HelloJSP</servlet-name>
+         <!--第二個url，不能跟第一個一樣-->
+        <!--1.透過url找到-->
+        <url-pattern>/zh-tw/hello.jsp</url-pattern>
+        <url-pattern>/hello.jsp</url-pattern>
+        <url-pattern>/jsp範例/hello.jsp</url-pattern>
+    </servlet-mapping>
+    <!--英文-->
+    <servlet>
+        <servlet-name>EnHelloJSP</servlet-name>
+        <jsp-file>/jsp範例/hello.jsp</jsp-file>
+        <init-param>
+            <param-name>welcome</param-name>
+            <param-value>Welcome, It is </param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EnHelloJSP</servlet-name>
+        <url-pattern>/en-us/hello.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RegisterServlet</servlet-name>
+        <url-pattern>/register.do</url-pattern>
+    </servlet-mapping>
+    
+    
+    <session-config>
+        <!--30秒畫面沒用就會刪掉，會重新取得請求-->
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    
+    <!--歡迎頁面的順序調整-->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+    
+     <!--只要是這裡的錯，全部都跳到指定捷徑,對子網頁沒效，主網頁有用-->
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/WEB-INF/error.jsp</location>
+    </error-page>
+    <error-page>
+         <!--錯誤訊息:404-->
+        <error-code>404</error-code>     
+        <!--錯誤訊息的路徑-->   
+        <location>/WEB-INF/error.jsp</location>
+    </error-page>
+    
+    <!--安全角色-->
+    <security-role>
+        <!--administrator管理者-->
+        <description>administrator</description>
+        <!--群組1名稱-->
+        <role-name>admins</role-name>
+    </security-role>
+ 
+    <security-role>
+        <!--一般使用者-->
+        <description>general user</description>
+        <!--群組2名稱-->
+        <role-name>users</role-name>
+    </security-role>
+    
+    
+    <!--login-config登入配置-->
+    <login-config>
+<!--        BASIC代表由瀏覽器登入畫面，身份會藏在請求回應傳來傳去
+        <auth-method>BASIC</auth-method>-->
+        <auth-method>FORM</auth-method>
+        <form-login-config>
+            <form-login-page>/WEB-INF/admin/login.jsp</form-login-page>
+            <form-error-page>/WEB-INF/admin/login_fail.jsp</form-error-page>
+        </form-login-config>
+    </login-config>
+    <security-constraint>
+        <display-name>css</display-name>
+        <web-resource-collection>
+            <web-resource-name>css</web-resource-name>
+            <description/>
+            <url-pattern>/style/*</url-pattern>
+            <url-pattern>/images/*</url-pattern>            
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+        </web-resource-collection> 
+    </security-constraint>    
+   
+    <!--瀏覽器允許暱名存取,所有人都可以用-->
+    <security-constraint>
+         <!--all所有的畫面-->
+        <display-name>all</display-name>
+        <web-resource-collection>
+            <web-resource-name>all</web-resource-name>
+            <description/>
+            <!--限制/totalbuy以下目錄，url可設多個-->
+            <url-pattern>/*</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+        </web-resource-collection> 
+        <!--授權檢查，要登入-->
+<!--        <auth-constraint>
+            <role-name>*</role-name>   *所有人          
+        </auth-constraint> -->
+         <!--全部不准用,錯誤403-->
+        <!--auth-constraint/ -->
+    </security-constraint>
+    
+    <!--admin管理員可以用的-->
+    <security-constraint>
+        <display-name>admin</display-name>
+        <web-resource-collection>
+             <!--使用者-->
+            <web-resource-name>admin</web-resource-name>
+            <description/>
+            <!--使用者可以登入的路徑範圍-->
+            <url-pattern>/admin/*</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+        </web-resource-collection> 
+         <!--會問帳密-->
+        <auth-constraint>
+            <!--只有admins群族才可以登入-->
+            <role-name>admins</role-name>            
+        </auth-constraint>
+        <!--全部不準用,錯誤403-->
+        <!--auth-constraint/ -->
+    </security-constraint>   
+    
+     <!--網路連線授權設定-->
+<!--這邊兩個可設可不設,代表兩個群組
+<role rolename="admins"/>
+<role rolename="users"/>
+
+<user username="ide" password="fMOnJHxY" roles="manager-script,admin"/>
+群組1 admins: admin管理員,manager-script為netbeans要用的群組
+<user username="admin" password="123456" roles="admins,users,manager-script"/>
+群組2 users:(3個使用者)
+<user username="users" password="123456" roles="users"/>
+<user username="user1" password="123456" roles="users"/>
+<user username="user2" password="123456" roles="users"/>
+   --> 
+</web-app>
