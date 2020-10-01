@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Chrome 127.0.0.1",
+      "type": "chrome",
+      "request": "launch",
+      "port": 9244,
+      "webRoot": "${workspaceFolder}",
+      "url": "http://127.0.0.1:7690/p/TotalBuy_webT/web/html%E7%AF%84%E4%BE%8B/bom.html?_cmAuth\u003dxvxebicawa"
+    }
+  ]
+}
